@@ -5,3 +5,5 @@ if git diff --cached --name-only | grep -q '^server/'; then
 else
   echo "No changes in server/, skipping linting."
 fi
+ 
+
