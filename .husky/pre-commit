@@ -1,0 +1,7 @@
+# Run only if there are changes in the 'server' folder
+if git diff --cached --name-only | grep -q '^server/'; then
+  cd server || exit 1
+  npx lint-staged
+else
+  echo "No changes in server/, skipping linting."
+fi
