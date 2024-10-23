@@ -1,26 +1,14 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { Payload } from "../dto/user.dto";
 import createHttpError from "http-errors";
+import { AppRequest } from "../types/general.types";
 dotenv.config();
-
-// export interface AppRequest<K, T> extends Request<object, object, T> {
-//     currentUser: K
-//     body: T
-// }
-
-export interface AppRequest<K = unknown, T = Record<string, unknown>>
-  extends Request {
-  currentUser?: K; // Optional currentUser property
-  body: T; // Body of the request with type T
-}
 
 export interface IRequest {
   currentUser?: Payload;
 }
-
-// req: Request<object, object, CreateUserRequest>,
 
 export const authenticationMiddleware = (
   req: AppRequest<Payload, unknown>,

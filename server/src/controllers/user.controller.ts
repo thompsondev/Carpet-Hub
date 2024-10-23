@@ -4,9 +4,10 @@ import { encrypt } from "../helpers/encrypt";
 import { AppDataSource } from "../db/data-source";
 import { CreateUserRequest, Payload, UserResponse } from "../dto/user.dto";
 import { Role } from "../entity/role.entity";
-import { AppRequest, checkCurrentUser } from "../middlewares/authentication";
+import { checkCurrentUser } from "../middlewares/authentication";
 import createHttpError from "http-errors";
 import { RolePermissions } from "../interfaces/role.interface";
+import { AppRequest } from "../types/general.types";
 
 export class UserController {
   static signup = async (
