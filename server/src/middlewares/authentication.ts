@@ -3,7 +3,8 @@ import * as jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { Payload } from "../dto/user.dto";
 import createHttpError from "http-errors";
-import { AppRequest } from "../types/general.types";
+import { AppRequest } from "../types/general.interface";
+import appConfig from "../config/appConfig";
 dotenv.config();
 
 export interface IRequest {
@@ -23,7 +24,7 @@ export const authenticationMiddleware = (
   if (!token) {
     throw createHttpError.Unauthorized("Invalid token");
   }
-  const decode = jwt.verify(token, process.env.JWT_SECRET!) as Payload;
+  const decode = jwt.verify(token, appConfig.env.JWT_SECRET) as Payload;
   if (!decode) {
     throw createHttpError.Unauthorized("Invalid token");
   }

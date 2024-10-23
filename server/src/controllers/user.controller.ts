@@ -7,7 +7,7 @@ import { Role } from "../entity/role.entity";
 import { checkCurrentUser } from "../middlewares/authentication";
 import createHttpError from "http-errors";
 import { RolePermissions } from "../interfaces/role.interface";
-import { AppRequest } from "../types/general.types";
+import { AppRequest } from "../types/general.interface";
 
 export class UserController {
   static signup = async (

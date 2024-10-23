@@ -2,9 +2,10 @@ import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcryptjs";
 import * as dotenv from "dotenv";
 import { Payload } from "../dto/user.dto";
+import appConfig from "../config/appConfig";
 
 dotenv.config();
-const { JWT_SECRET = "" } = process.env;
+const { JWT_SECRET = "" } = appConfig.env;
 export class encrypt {
   static async encryptpass(password: string) {
     try {

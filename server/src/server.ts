@@ -1,16 +1,16 @@
-// Import the 'express' module along with 'Request' and 'Response' types from express
 import express, { Request, Response } from "express";
 import "reflect-metadata";
 import { AppDataSource } from "./db/data-source";
 import seedRoles from "./helpers/seedRoles";
 import { errorHandler } from "./middlewares/error";
 import createError from "http-errors";
+import appConfig from "./config/appConfig";
 
 // Create an Express application
 const app = express();
 
 // Specify the port number for the server
-const port = 3000;
+const port = appConfig.env.PORT;
 
 // Define a route for the root path ('/')
 app.get("/", (req: Request, res: Response) => {

@@ -4,11 +4,12 @@ import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
 import { User } from "../entity/user.entity";
 import { Role } from "../entity/role.entity";
+import appConfig from "../config/appConfig";
 
 dotenv.config();
 
 const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_ENV } =
-  process.env;
+  appConfig.env;
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -18,9 +19,9 @@ export const AppDataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_DATABASE,
 
-  synchronize: NODE_ENV === "dev" ? false : false,
+  synchronize: NODE_ENV === "development" ? false : false,
   //logging logs sql command on the treminal
-  logging: NODE_ENV === "dev" ? false : false,
+  logging: NODE_ENV === "development" ? false : false,
   entities: [User, Role],
   migrations: [__dirname + "/migration/*.ts"],
   subscribers: [],
