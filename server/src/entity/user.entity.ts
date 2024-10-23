@@ -1,22 +1,38 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Index,
+} from "typeorm";
 import { Role } from "./role.entity";
 
-@Entity()
+@Entity({ name: "users" })
 export class User {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
+  @Index({ unique: true })
   @Column({ nullable: false })
   username: string;
 
-  @Column({ nullable: false })
+  @Index({ unique: true })
+  @Column({ type: "varchar", length: 100, nullable: false })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ type: "varchar", length: 100, nullable: false })
   name: string;
 
   @Column({ nullable: false })
   password: string;
+
+  @CreateDateColumn()
+  created_at!: Date;
+
+  @UpdateDateColumn()
+  updated_date!: Date;
 
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;

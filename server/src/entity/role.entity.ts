@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, PrimaryColumn } from "typeorm";
 import { User } from "./user.entity";
 import {
   RoleID,
@@ -6,9 +6,9 @@ import {
   UserRole,
 } from "../interfaces/role.interface";
 
-@Entity()
+@Entity({ name: "roles" })
 export class Role {
-  @Column({
+  @PrimaryColumn({
     type: "enum",
     enum: RoleID,
     default: RoleID.MANAGER,
