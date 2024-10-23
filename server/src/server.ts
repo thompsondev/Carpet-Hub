@@ -3,6 +3,8 @@ import express, { Request, Response } from "express";
 import "reflect-metadata";
 import { AppDataSource } from "./db/data-source";
 import seedRoles from "./helpers/seedRoles";
+import { errorHandler } from "./middlewares/error";
+import createError from "http-errors";
 
 // Create an Express application
 const app = express();
@@ -15,6 +17,14 @@ app.get("/", (req: Request, res: Response) => {
   // Send a response to the client
   res.send("Hello, TypeScript + Node.js + Express!");
 });
+
+// ! Throw error for unhandled routes
+app.use(() => {
+  throw createError.NotFound("Route not found");
+});
+
+// ! Global error handler
+app.use(errorHandler());
 
 // Start the server and listen on the specified port
 AppDataSource.initialize()

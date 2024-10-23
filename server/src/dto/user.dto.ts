@@ -1,21 +1,32 @@
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { User } from "../entity/user.entity";
+import { UserRole } from "../interfaces/role.interface";
 
-// export class UserResponse {
-//   id!: string;
-//   name!: string;
-//   email!: string;
-//   role!: Role;
-// }
+export class CreateUserClass {
+  @IsString()
+  @IsNotEmpty()
+  username!: string;
 
-// export type Payload = InstanceType<typeof UserResponse>;
+  @IsString()
+  @IsEnum(UserRole)
+  role!: UserRole;
 
-export type UserResponse = Pick<
-  User,
-  "id" | "username" | "role" | "email" | "name"
->;
+  @IsEmail()
+  @IsNotEmpty()
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
+}
+
+export type CreateUserRequest = InstanceType<typeof CreateUserClass>;
+
+export type UserResponse = Omit<CreateUserRequest, "password"> &
+  Pick<User, "id">;
 
 export type Payload = UserResponse;
-
-export interface CreateUserRequest extends UserResponse {
-  password: string; // Include password in the interface
-}
