@@ -1,5 +1,6 @@
 // Import the 'express' module along with 'Request' and 'Response' types from express
 import express, { Request, Response } from "express";
+import "reflect-metadata";
 
 // Create an Express application
 const app = express();
