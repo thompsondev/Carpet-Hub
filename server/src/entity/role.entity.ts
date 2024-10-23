@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { User } from "./user.entity";
-import { IRole } from "../interfaces/user.interface";
+import { IRole, IRolePermissions } from "../interfaces/role.interface";
 
 @Entity()
 export class Role {
@@ -11,7 +11,7 @@ export class Role {
   name!: IRole;
 
   @Column({ nullable: false })
-  roleId!: number;
+  permissions!: IRolePermissions[];
 
   @OneToMany(() => User, (user) => user.role)
   users!: User[];

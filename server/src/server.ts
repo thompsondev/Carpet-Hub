@@ -1,6 +1,8 @@
 // Import the 'express' module along with 'Request' and 'Response' types from express
 import express, { Request, Response } from "express";
 import "reflect-metadata";
+import { AppDataSource } from "./db/data-source";
+import seedRoles from "./helpers/seedRoles";
 
 // Create an Express application
 const app = express();
@@ -15,7 +17,15 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Start the server and listen on the specified port
-app.listen(port, () => {
-  // Log a message when the server is successfully running
-  console.log(`Server is running on http://localhost:${port}`);
-});
+AppDataSource.initialize()
+  .then(async () => {
+    console.log("Database connected successfully");
+    await seedRoles(); // Seed roles
+  })
+  .then(() => {
+    app.listen(port, () => {
+      console.log("Server is running on http://localhost:" + port);
+    });
+    console.log("Data Source has been initialized!");
+  })
+  .catch((error) => console.log(error));
