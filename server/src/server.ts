@@ -12,9 +12,7 @@ const app = express();
 // Specify the port number for the server
 const port = appConfig.env.PORT;
 
-// Define a route for the root path ('/')
 app.get("/", (req: Request, res: Response) => {
-  // Send a response to the client
   res.send("Hello, TypeScript + Node.js + Express!");
 });
 
@@ -26,7 +24,7 @@ app.use(() => {
 // ! Global error handler
 app.use(errorHandler());
 
-// Start the server and listen on the specified port
+// Connect to database and start server and listen on the specified port
 AppDataSource.initialize()
   .then(async () => {
     console.log("Database connected successfully");
