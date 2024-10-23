@@ -1,14 +1,17 @@
-import { getRepository } from "typeorm";
 import { Role } from "../entity/role.entity";
 import { predefinedRoles } from "../interfaces/role.interface";
+import { AppDataSource } from "../db/data-source";
 
 async function seedRoles() {
-  const roleRepository = getRepository(Role);
+  // Initialize the data source
+  await AppDataSource.initialize();
+
+  const roleRepository = AppDataSource.getRepository(Role); // Use getRepository from the data source
 
   for (const roleData of predefinedRoles) {
     // Check if the role already exists
     const existingRole = await roleRepository.findOne({
-      where: { name: roleData.name },
+      where: { id: roleData.id },
     });
 
     // If it doesn't exist, create it

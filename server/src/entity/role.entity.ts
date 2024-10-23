@@ -1,17 +1,30 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany } from "typeorm";
 import { User } from "./user.entity";
-import { IRole, IRolePermissions } from "../interfaces/role.interface";
+import {
+  RoleID,
+  RolePermissions,
+  UserRole,
+} from "../interfaces/role.interface";
 
 @Entity()
 export class Role {
-  @PrimaryGeneratedColumn()
+  @Column({
+    type: "enum",
+    enum: RoleID,
+    default: RoleID.MANAGER,
+    unique: true,
+  })
   id!: number;
 
-  @Column({ nullable: false })
-  name!: IRole;
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.MANAGER,
+  })
+  name!: UserRole;
 
   @Column({ nullable: false })
-  permissions!: IRolePermissions[];
+  permissions!: RolePermissions[];
 
   @OneToMany(() => User, (user) => user.role)
   users!: User[];

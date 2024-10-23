@@ -1,11 +1,36 @@
 import { Role } from "../entity/role.entity";
 
-export type IRole = "superadmin" | "manager" | "approval_manager";
+export enum RolePermissions {
+  SUPER = "Admin",
+  EDIT = "Editor",
+  VIEW = "Viewer",
+}
 
-export type IRolePermissions = "Admin" | "Editor" | "Viewer";
+export enum RoleID {
+  ADMIN = 1,
+  APPROVAL = 100,
+  MANAGER = 1000,
+}
+
+export enum UserRole {
+  ADMIN = "superadmin",
+  APPROVAL = "approval_manager",
+  MANAGER = "manager",
+}
+
+const RP = RolePermissions;
+const RID = RoleID;
 
 export const predefinedRoles: Omit<Role, "users">[] = [
-  { name: "superadmin", permissions: ["Admin", "Editor", "Viewer"], id: 1 },
-  { name: "approval_manager", permissions: ["Editor", "Viewer"], id: 2 },
-  { name: "manager", permissions: ["Viewer"], id: 3 },
+  {
+    name: UserRole.ADMIN,
+    permissions: [RP.SUPER, RP.EDIT, RP.VIEW],
+    id: RID.ADMIN,
+  },
+  {
+    name: UserRole.APPROVAL,
+    permissions: [RP.EDIT, RP.VIEW],
+    id: RID.APPROVAL,
+  },
+  { name: UserRole.MANAGER, permissions: [RP.VIEW], id: RID.MANAGER },
 ];
