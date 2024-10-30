@@ -2,6 +2,8 @@ import { Role } from "../entity/role.entity";
 import { predefinedRoles, RoleID } from "../interfaces/role.interface";
 import { IAppDataConnection } from "../server";
 
+const unused = "a";
+
 async function seedRoles(AppDataConnection: IAppDataConnection) {
   // Check if data source is initialized and initialize if false
   if (!AppDataConnection.isInitialized) {
