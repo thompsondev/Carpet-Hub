@@ -1,29 +1,48 @@
 import { Response } from "express";
 import { User } from "../entity/user.entity";
 import { encrypt } from "../helpers/encrypt";
-import { AppDataSource } from "../db/data-source";
-import { CreateUserRequest, Payload, UserResponse } from "../dto/user.dto";
+import {
+  CreateUserRequest,
+  Payload,
+  SignUpResponse,
+  CreateUserResponse,
+} from "../dto/user.dto";
 import { Role } from "../entity/role.entity";
 import { checkCurrentUser } from "../middlewares/authentication";
 import createHttpError from "http-errors";
-import { RolePermissions } from "../interfaces/role.interface";
+import { RoleID, RolePermissions } from "../interfaces/role.interface";
 import { AppRequest } from "../types/general.interface";
+import { AppDataConnection } from "../server";
 
 export class UserController {
+  // super-admin account creation
   static signup = async (
-    req: AppRequest<unknown, CreateUserRequest>,
+    req: AppRequest<unknown, Omit<CreateUserRequest, "role">>,
     res: Response,
   ): Promise<void> => {
-    const { username, name, email, password, role } = req.body;
-    const roleRepository = AppDataSource.getRepository(Role);
+    const { username, name, email, password } = req.body;
+
+    const userRepository = AppDataConnection.getRepository(User);
+    const superadmin = await userRepository.findOne({
+      relations: { role: true },
+      where: { role: { id: RoleID.ADMIN } },
+    });
+
+    if (superadmin) {
+      res.status(400).json({ message: "Superadmin already exists" });
+      return;
+    }
+
+    const roleRepository = AppDataConnection.getRepository(Role);
     const selectedRole = await roleRepository.findOne({
-      where: { name: role },
+      where: { id: RoleID.ADMIN },
     });
 
     if (!selectedRole) {
-      res.status(404).json({ message: "Role not found" });
+      res.status(400).json({ message: "Error creating user" });
       return;
     }
+
     const encryptedPassword = await encrypt.encryptpass(password);
     const user = new User({
       name,
@@ -33,10 +52,9 @@ export class UserController {
       role: selectedRole,
     });
 
-    const userRepository = AppDataSource.getRepository(User);
     await userRepository.save(user);
     // Use the UserResponse DTO to structure the data being sent in the response
-    const userDataSent: UserResponse = {
+    const userDataSent: SignUpResponse = {
       id: user.id,
       name: user.name,
       email: user.email,
@@ -57,7 +75,7 @@ export class UserController {
     res: Response,
   ): Promise<void> => {
     checkCurrentUser(req);
-    const userRepository = AppDataSource.getRepository(User);
+    const userRepository = AppDataConnection.getRepository(User);
     const adminUser = await userRepository.findOne({
       where: { id: req.currentUser?.id },
     });
@@ -66,7 +84,7 @@ export class UserController {
       throw createHttpError.Forbidden("Forbidden");
 
     const { username, name, email, password, role } = req.body;
-    const roleRepository = AppDataSource.getRepository(Role);
+    const roleRepository = AppDataConnection.getRepository(Role);
     const selectedRole = await roleRepository.findOne({
       where: { name: role },
     });
@@ -86,12 +104,13 @@ export class UserController {
 
     await userRepository.save(user);
     // Use the UserResponse DTO to structure the data being sent in the response
-    const userDataSent: UserResponse = {
+    const userDataSent: CreateUserResponse = {
       id: user.id,
       name: user.name,
       email: user.email,
       role: selectedRole.name,
       username: user.username,
+      password: password,
     };
 
     res

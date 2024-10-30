@@ -1,12 +1,14 @@
 import { Role } from "../entity/role.entity";
 import { predefinedRoles } from "../interfaces/role.interface";
-import { AppDataSource } from "../db/data-source";
+import { IAppDataConnection } from "../server";
 
-async function seedRoles() {
-  // Initialize the data source
-  await AppDataSource.initialize();
+async function seedRoles(AppDataConnection: IAppDataConnection) {
+  // Check if data source is initialized and initialize if false
+  if (!AppDataConnection.isInitialized) {
+    await AppDataConnection.initialize();
+  }
 
-  const roleRepository = AppDataSource.getRepository(Role); // Use getRepository from the data source
+  const roleRepository = AppDataConnection.getRepository(Role); // Use getRepository from the data source
 
   for (const roleData of predefinedRoles) {
     // Check if the role already exists
@@ -17,7 +19,7 @@ async function seedRoles() {
     // If it doesn't exist, create it
     if (!existingRole) {
       const role = roleRepository.create(roleData);
-      await roleRepository.save(role);
+      const newRole = await roleRepository.save(role);
       console.log(`Role ${role.name} created.`);
     } else {
       console.log(`Role ${roleData.name} already exists.`);

@@ -9,21 +9,28 @@ import {
 @Entity({ name: "roles" })
 export class Role {
   @PrimaryColumn({
-    type: "enum",
-    enum: RoleID,
+    nullable: false,
+    type: "int",
     default: RoleID.MANAGER,
     unique: true,
   })
   id!: number;
 
   @Column({
+    nullable: false,
     type: "enum",
     enum: UserRole,
     default: UserRole.MANAGER,
   })
   name!: UserRole;
 
-  @Column({ nullable: false })
+  @Column({
+    nullable: false,
+    type: "enum",
+    array: true,
+    enum: RolePermissions,
+    default: [RolePermissions.VIEW],
+  })
   permissions!: RolePermissions[];
 
   @OneToMany(() => User, (user) => user.role)

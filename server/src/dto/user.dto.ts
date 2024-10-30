@@ -26,7 +26,9 @@ export class CreateUserClass {
 
 export type CreateUserRequest = InstanceType<typeof CreateUserClass>;
 
-export type UserResponse = Omit<CreateUserRequest, "password"> &
+export type SignUpResponse = Omit<CreateUserRequest, "password"> &
   Pick<User, "id">;
 
-export type Payload = UserResponse;
+export type CreateUserResponse = CreateUserRequest & Pick<User, "id">;
+
+export type Payload = SignUpResponse;

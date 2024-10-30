@@ -6,7 +6,7 @@ export const env = cleanEnv(process.env, {
     choices: ["development", "production"],
     default: "development",
   }),
-  DB_CONNECTION_URL: url(),
+  DB_CONNECTION_URL: str(),
   TOKEN_SPAN: str({ default: "7d" }),
   TOKEN_SECRET: str(),
   REFRESH_SECRET: str(),

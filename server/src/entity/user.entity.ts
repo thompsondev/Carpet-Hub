@@ -16,17 +16,17 @@ export class User {
 
   @Index({ unique: true })
   @Column({ nullable: false })
-  username: string;
+  username!: string;
 
   @Index({ unique: true })
   @Column({ type: "varchar", length: 100, nullable: false })
-  email: string;
+  email!: string;
 
   @Column({ type: "varchar", length: 100, nullable: false })
-  name: string;
+  name!: string;
 
   @Column({ nullable: false })
-  password: string;
+  password!: string;
 
   @CreateDateColumn()
   created_at!: Date;
@@ -35,25 +35,15 @@ export class User {
   updated_date!: Date;
 
   @ManyToOne(() => Role, (role) => role.users)
-  role: Role;
+  role!: Role;
 
-  constructor({
-    password,
-    username,
-    email,
-    name,
-    role,
-  }: {
+  constructor(args: {
     password: string;
     username: string;
     email: string;
     name: string;
     role: Role;
   }) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.name = name;
-    this.role = role;
+    Object.assign(this, args);
   }
 }

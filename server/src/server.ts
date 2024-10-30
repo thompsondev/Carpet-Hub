@@ -12,6 +12,8 @@ const app = express();
 // Specify the port number for the server
 const port = appConfig.env.PORT;
 
+app.use(express.json());
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, TypeScript + Node.js + Express!");
 });
@@ -24,11 +26,14 @@ app.use(() => {
 // ! Global error handler
 app.use(errorHandler());
 
-// Connect to database and start server and listen on the specified port
-AppDataSource.initialize()
+// Connect to database and start server then listen on the specified port
+export const AppDataConnection = AppDataSource({ baseDir: __dirname });
+export type IAppDataConnection = typeof AppDataConnection;
+
+AppDataConnection.initialize()
   .then(async () => {
     console.log("Database connected successfully");
-    await seedRoles(); // Seed roles
+    await seedRoles(AppDataConnection); // Seed roles
   })
   .then(() => {
     app.listen(port, () => {
