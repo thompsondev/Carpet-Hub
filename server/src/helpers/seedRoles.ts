@@ -1,5 +1,5 @@
 import { Role } from "../entity/role.entity";
-import { predefinedRoles } from "../interfaces/role.interface";
+import { predefinedRoles, RoleID } from "../interfaces/role.interface";
 import { IAppDataConnection } from "../server";
 
 async function seedRoles(AppDataConnection: IAppDataConnection) {
